@@ -9,6 +9,7 @@
 
 namespace Endroid\Pdf;
 
+use Endroid\Pdf\Asset\AbstractAsset;
 use Endroid\Pdf\Asset\ControllerAsset;
 use Endroid\Pdf\Asset\DataAsset;
 use Endroid\Pdf\Asset\FileAsset;
