@@ -14,6 +14,8 @@ use Endroid\Pdf\Asset\ControllerAsset;
 use Endroid\Pdf\Asset\DataAsset;
 use Endroid\Pdf\Asset\FileAsset;
 use Endroid\Pdf\Asset\TemplateAsset;
+use iio\libmergepdf\Merger;
+use iio\libmergepdf\Pages;
 use Knp\Snappy\Pdf as Snappy;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -37,11 +39,6 @@ final class Pdf
         $this->kernel = $kernel;
         $this->requestStack = $requestStack;
         $this->templating = $templating;
-    }
-
-    public function getSnappy(): Snappy
-    {
-        return $this->snappy;
     }
 
     public function setCover(string $assetSource, array $assetParameters = []): void
@@ -87,12 +84,84 @@ final class Pdf
         return new DataAsset($assetSource);
     }
 
-    public function generate(): string
+    public function setOptions(array $options = []): void
     {
-        return $this->snappy->getOutputFromHtml($this->content);
+        $this->snappy->setOptions($options);
     }
 
-    public function __toString()
+    public function generate(): string
+    {
+        $coverPdf = $this->createCoverPdf();
+        if ($coverPdf instanceof Pdf) {
+            $this->snappy->setOption('cover', null);
+        }
+
+        $pdf = $this->snappy->getOutputFromHtml($this->content);
+
+        if ($coverPdf instanceof Pdf) {
+            $pdfMerger = new Merger();
+            $pdfMerger->addRaw($coverPdf, new Pages('1'));
+            $pdfMerger->addRaw($pdf);
+            $pdf = $pdfMerger->merge();
+        }
+
+        return $pdf;
+    }
+
+    private function createCoverPdf(): ?Pdf
+    {
+        $options = $this->snappy->getOptions();
+
+        if (!$options['cover'] instanceof AbstractAsset) {
+            return null;
+        }
+
+        if (!$this->hasMargins()) {
+            return null;
+        }
+
+        $coverPdf = clone $this;
+        $coverPdf->setContent($options['cover']);
+        $coverPdf->setOptions([
+            'cover' => null,
+            'toc' => null,
+            'xsl-style-sheet' => null,
+            'header-html' => null,
+            'footer-html' => null,
+            'margin-top' => 0,
+            'margin-right' => 0,
+            'margin-bottom' => 0,
+            'margin-left' => 0,
+        ]);
+
+        return $coverPdf;
+    }
+
+    private function hasMargins()
+    {
+        $options = $this->snappy->getOptions();
+
+        if ($options['header-html'] || $options['footer-html']) {
+            return true;
+        }
+
+        if ($options['margin-top'] > 0 || $options['margin-bottom'] > 0) {
+            return true;
+        }
+
+        if ($options['margin-left'] > 0 || $options['margin-right'] > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function __clone()
+    {
+        $this->snappy = clone $this->snappy;
+    }
+
+    public function __toString(): string
     {
         return $this->generate();
     }
