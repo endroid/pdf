@@ -27,6 +27,8 @@ final class Pdf
     private $kernel;
     private $requestStack;
     private $templating;
+
+    private $coverStrategy;
     private $content;
 
     public function __construct(
@@ -39,27 +41,38 @@ final class Pdf
         $this->kernel = $kernel;
         $this->requestStack = $requestStack;
         $this->templating = $templating;
+
+        $this->coverStrategy = CoverStrategy::create(CoverStrategy::AUTO);
     }
 
     public function setCover(string $assetSource, array $assetParameters = []): void
     {
-        $this->snappy->setOption('cover', $this->createAsset($assetSource, $assetParameters));
+        $cover = $this->createAsset($assetSource, $assetParameters);
+        $this->snappy->setOption('cover', $cover->getData());
+    }
+
+    public function setCoverStrategy(CoverStrategy $coverStrategy): void
+    {
+        $this->coverStrategy = $coverStrategy;
     }
 
     public function setTableOfContents(string $assetSource, array $assetParameters = []): void
     {
+        $tableOfContents = $this->createAsset($assetSource, $assetParameters);
         $this->snappy->setOption('toc', true);
-        $this->snappy->setOption('xsl-style-sheet', $this->createAsset($assetSource, $assetParameters));
+        $this->snappy->setOption('xsl-style-sheet', $tableOfContents->getData());
     }
 
     public function setHeader(string $assetSource, array $assetParameters = []): void
     {
-        $this->snappy->setOption('header-html', $this->createAsset($assetSource, $assetParameters));
+        $header = $this->createAsset($assetSource, $assetParameters);
+        $this->snappy->setOption('header-html', $header->getData());
     }
 
     public function setFooter(string $assetSource, array $assetParameters = []): void
     {
-        $this->snappy->setOption('footer-html', $this->createAsset($assetSource, $assetParameters));
+        $footer = $this->createAsset($assetSource, $assetParameters);
+        $this->snappy->setOption('footer-html', $footer->getData());
     }
 
     public function setContent(string $assetSource, array $assetParameters = []): void
@@ -67,7 +80,7 @@ final class Pdf
         $this->content = $this->createAsset($assetSource, $assetParameters);
     }
 
-    public function createAsset(string $assetSource, array $assetParameters = []): AbstractAsset
+    private function createAsset(string $assetSource, array $assetParameters = []): AbstractAsset
     {
         if (class_exists($assetSource)) {
             return new ControllerAsset($this->kernel, $this->requestStack, $assetSource, $assetParameters);
@@ -96,7 +109,7 @@ final class Pdf
             $this->snappy->setOption('cover', null);
         }
 
-        $pdf = $this->snappy->getOutputFromHtml($this->content);
+        $pdf = $this->snappy->getOutputFromHtml($this->content->getData());
 
         if ($coverPdf instanceof Pdf) {
             $pdfMerger = new Merger();
@@ -112,11 +125,11 @@ final class Pdf
     {
         $options = $this->snappy->getOptions();
 
-        if (!$options['cover'] instanceof AbstractAsset) {
+        if (!$options['cover'] || $this->coverStrategy->equals(CoverStrategy::PARAM)) {
             return null;
         }
 
-        if (!$this->hasMargins()) {
+        if ($this->coverStrategy->equals(CoverStrategy::AUTO) && !$this->hasMargins()) {
             return null;
         }
 
