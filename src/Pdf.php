@@ -105,13 +105,13 @@ final class Pdf
     public function generate(): string
     {
         $coverPdf = $this->createCoverPdf();
-        if ($coverPdf instanceof Pdf) {
+        if ($coverPdf instanceof self) {
             $this->snappy->setOption('cover', null);
         }
 
         $pdf = $this->snappy->getOutputFromHtml($this->content->getData());
 
-        if ($coverPdf instanceof Pdf) {
+        if ($coverPdf instanceof self) {
             $pdfMerger = new Merger();
             $pdfMerger->addRaw($coverPdf, new Pages('1'));
             $pdfMerger->addRaw($pdf);
