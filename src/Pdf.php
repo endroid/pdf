@@ -90,7 +90,7 @@ final class Pdf
             return new FileAsset($assetSource);
         }
 
-        if ($this->templating->getLoader()->exists($assetSource)) {
+        if ($this->templating instanceof Environment && $this->templating->getLoader()->exists($assetSource)) {
             return new TemplateAsset($this->templating, $assetSource, $assetParameters);
         }
 
