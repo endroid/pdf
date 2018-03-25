@@ -32,8 +32,9 @@ class EmbedExtension extends AbstractExtension
     public function embed(string $source): string
     {
         $data = file_get_contents($source);
+        $data = 'data:'.$this->getMimeType($data).';base64,'.base64_encode($data);
 
-        return 'data:'.$this->getMimeType($data).';base64,'.base64_encode($data);
+        return $data;
     }
 
     private function getMimeType(string $data): string
