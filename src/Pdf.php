@@ -10,45 +10,26 @@
 namespace Endroid\Pdf;
 
 use Endroid\Pdf\Asset\AbstractAsset;
-use Endroid\Pdf\Asset\ControllerAsset;
 use Endroid\Pdf\Asset\DataAsset;
-use Endroid\Pdf\Asset\FileAsset;
-use Endroid\Pdf\Asset\TemplateAsset;
 use iio\libmergepdf\Merger;
 use iio\libmergepdf\Pages;
 use Knp\Snappy\Pdf as Snappy;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Twig\Environment;
 
 final class Pdf
 {
     private $snappy;
-    private $kernel;
-    private $requestStack;
-    private $templating;
-
-    private $coverStrategy;
     private $content;
+    private $coverStrategy;
 
-    public function __construct(
-        Snappy $snappy,
-        HttpKernelInterface $kernel = null,
-        RequestStack $requestStack = null,
-        Environment $templating = null
-    ) {
+    public function __construct(Snappy $snappy)
+    {
         $this->snappy = $snappy;
-        $this->kernel = $kernel;
-        $this->requestStack = $requestStack;
-        $this->templating = $templating;
-
         $this->coverStrategy = CoverStrategy::create(CoverStrategy::AUTO);
     }
 
-    public function setCover(string $assetSource, array $assetParameters = []): void
+    public function setCover(AbstractAsset $asset): void
     {
-        $cover = $this->createAsset($assetSource, $assetParameters);
-        $this->snappy->setOption('cover', $cover->getData());
+        $this->snappy->setOption('cover', $asset->getData());
     }
 
     public function setCoverStrategy(CoverStrategy $coverStrategy): void
@@ -56,45 +37,25 @@ final class Pdf
         $this->coverStrategy = $coverStrategy;
     }
 
-    public function setTableOfContents(string $assetSource, array $assetParameters = []): void
+    public function setTableOfContents(AbstractAsset $asset): void
     {
-        $tableOfContents = $this->createAsset($assetSource, $assetParameters);
         $this->snappy->setOption('toc', true);
-        $this->snappy->setOption('xsl-style-sheet', $tableOfContents->getData());
+        $this->snappy->setOption('xsl-style-sheet', $asset->getData());
     }
 
-    public function setHeader(string $assetSource, array $assetParameters = []): void
+    public function setHeader(AbstractAsset $asset): void
     {
-        $header = $this->createAsset($assetSource, $assetParameters);
-        $this->snappy->setOption('header-html', $header->getData());
+        $this->snappy->setOption('header-html', $asset->getData());
     }
 
-    public function setFooter(string $assetSource, array $assetParameters = []): void
+    public function setFooter(AbstractAsset $asset): void
     {
-        $footer = $this->createAsset($assetSource, $assetParameters);
-        $this->snappy->setOption('footer-html', $footer->getData());
+        $this->snappy->setOption('footer-html', $asset->getData());
     }
 
-    public function setContent(string $assetSource, array $assetParameters = []): void
+    public function setContent(AbstractAsset $asset): void
     {
-        $this->content = $this->createAsset($assetSource, $assetParameters);
-    }
-
-    private function createAsset(string $assetSource, array $assetParameters = []): AbstractAsset
-    {
-        if (class_exists($assetSource)) {
-            return new ControllerAsset($this->kernel, $this->requestStack, $assetSource, $assetParameters);
-        }
-
-        if (file_exists($assetSource)) {
-            return new FileAsset($assetSource);
-        }
-
-        if ($this->templating instanceof Environment && $this->templating->getLoader()->exists($assetSource)) {
-            return new TemplateAsset($this->templating, $assetSource, $assetParameters);
-        }
-
-        return new DataAsset($assetSource);
+        $this->content = $asset;
     }
 
     public function setOptions(array $options = []): void
@@ -134,7 +95,7 @@ final class Pdf
         }
 
         $coverPdf = clone $this;
-        $coverPdf->setContent($options['cover']);
+        $coverPdf->setContent(new DataAsset($options['cover']));
         $coverPdf->setOptions([
             'cover' => null,
             'toc' => null,
@@ -150,11 +111,11 @@ final class Pdf
         return $coverPdf;
     }
 
-    private function hasMargins()
+    private function hasMargins(): bool
     {
         $options = $this->snappy->getOptions();
 
-        if ($options['header-html'] || $options['footer-html']) {
+        if (null !== $options['header-html'] || null !== $options['footer-html']) {
             return true;
         }
 
