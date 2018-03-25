@@ -15,7 +15,8 @@
     "require": {
         "php": ">=7.1",
         "knplabs/knp-snappy": "^1.0",
-        "iio/libmergepdf": "^3.0"
+        "iio/libmergepdf": "^3.0",
+        "symfony/options-resolver": "^3.4|^4.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7|^6.0",
