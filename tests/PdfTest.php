@@ -9,6 +9,7 @@
 
 namespace Endroid\Pdf\Tests;
 
+use Endroid\Pdf\Builder\PdfBuilder;
 use Endroid\Pdf\Factory\AssetFactory;
 use Endroid\Pdf\Pdf;
 use Knp\Snappy\Pdf as Snappy;
@@ -19,14 +20,19 @@ class PdfTest extends TestCase
     public function testNoTestsYet()
     {
         $snappy = new Snappy(__DIR__.'/../vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64');
-        $assetFactory = new AssetFactory();
 
         $pdf = new Pdf($snappy);
-        $pdf->setContent($assetFactory->create([
-            'data' => '<html><head><title>PDF</title></head><body>PDF Content</body></html>'
-        ]));
+        $assetFactory = new AssetFactory();
+        $pdfBuilder = new PdfBuilder($pdf, $assetFactory);
 
-        $pdfString = $pdf->generate();
+        $pdfBuilder
+            ->setContent(['data' => '<html><head><title>PDF</title></head><body>PDF Content</body></html>'])
+            ->setOptions([
+                'margin-top' => 10,
+            ])
+        ;
+
+        $pdfString = $pdfBuilder->getPdf()->generate();
 
         $this->assertStringStartsWith('%PDF', $pdfString);
     }

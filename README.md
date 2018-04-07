@@ -7,7 +7,7 @@
 [![Total Downloads](http://img.shields.io/packagist/dt/endroid/pdf.svg)](https://packagist.org/packages/endroid/pdf)
 [![License](http://img.shields.io/packagist/l/endroid/pdf.svg)](https://packagist.org/packages/endroid/pdf)
 
-Library for quickly generating PDF files.
+Library for easy PDF generation.
 
 ## Installation
 
@@ -70,52 +70,36 @@ and request stack are available controller actions can be used as asset.
 
 namespace App\Controller\Pdf;
 
-use Endroid\Pdf\Factory\AssetFactory;
-use Endroid\Pdf\Pdf;
+use Endroid\Pdf\Builder\PdfBuilder;
 use Endroid\Pdf\Response\InlinePdfResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 final class PdfController
 {
-    private $assetFactory;
-    private $pdf;
+    private $pdfBuilder;
 
-    public function __construct(AssetFactory $assetFactory, Pdf $pdf)
+    public function __construct(PdfBuilder $pdfBuilder)
     {
-        $this->assetFactory = $assetFactory;
-        $this->pdf = $pdf;
+        $this->pdfBuilder = $pdfBuilder;
     }
     
     public function __invoke(): Response
     {
-        $this->pdf->setCover($this->assetFactory->create([
-            'controller' => CoverController::class,
-            'cache' => 'cover',
-        ]));
-        $this->pdf->setTableOfContents($this->assetFactory->create([
-            'template' => 'pdf/table_of_contents.xml.twig',
-            'cache' => 'toc',
-        ]));
-        $this->pdf->setHeader($this->assetFactory->create([
-            'template' => 'pdf/header.html.twig',
-            'cache' => 'header',
-        ]));
-        $this->pdf->setFooter($this->assetFactory->create([
-            'template' => 'pdf/footer.html.twig',
-            'cache' => 'footer',
-        ]));
-        $this->pdf->setContent($this->assetFactory->create([
-            'controller' => ContentController::class,
-            'cache' => 'content',
-        ]));
-        $this->pdf->setOptions([
-            'margin-top' => 16,
-            'margin-bottom' => 16,
-            'header-spacing' => 5,
-            'footer-spacing' => 5,
-        ]);
-        
-        return new InlinePdfResponse($this->pdf);
+        $this->pdfBuilder
+            ->setCover(['controller' => CoverController::class, 'cache' => 'cover'])
+            ->setTableOfContents(['template' => 'pdf/table_of_contents.xml.twig', 'cache' => 'toc'])
+            ->setHeader(['template' => 'pdf/header.html.twig', 'cache' => 'header'])
+            ->setFooter(['template' => 'pdf/footer.html.twig', 'cache' => 'footer'])
+            ->setContent(['controller' => ContentController::class, 'cache' => 'content'])
+            ->setOptions([
+                'margin-top' => 16,
+                'margin-bottom' => 16,
+                'header-spacing' => 5,
+                'footer-spacing' => 5,
+            ])
+        ;
+    
+        return new InlinePdfResponse($this->pdfBuilder->getPdf());
     }
 }
 ```
