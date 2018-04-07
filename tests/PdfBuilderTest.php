@@ -15,7 +15,7 @@ use Endroid\Pdf\Pdf;
 use Knp\Snappy\Pdf as Snappy;
 use PHPUnit\Framework\TestCase;
 
-class PdfTest extends TestCase
+class PdfBuilderTest extends TestCase
 {
     public function testNoTestsYet()
     {
