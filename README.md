@@ -7,15 +7,80 @@
 [![Total Downloads](http://img.shields.io/packagist/dt/endroid/pdf.svg)](https://packagist.org/packages/endroid/pdf)
 [![License](http://img.shields.io/packagist/l/endroid/pdf.svg)](https://packagist.org/packages/endroid/pdf)
 
-Library for easy PDF generation.
+Library for easy PDF generation built around wkhtmltopdf and Snappy.
 
-## Installation
+## Features
+
+* Use any type of source: a HTML string, a file, a template or a controller.
+* Add a cover, table of contents, header, footer or contents from any source.
+* Embed resources like fonts, images, stylesheets and scripts.
+* Cache resources to improve performance.
+
+## Example usage
+
+```php
+
+$pdfBuilder
+    ->setCover(['controller' => CoverController::class])
+    ->setTableOfContents(['template' => 'pdf/table_of_contents.xml.twig', 'cache' => 'toc'])
+    ->setHeader(['file' => 'header.html'])
+    ->setFooter(['template' => 'pdf/footer.html.twig', 'cache' => 'footer'])
+    ->setContent(['controller' => ContentController::class])
+    ->setOptions([
+        'margin-top' => 16,
+        'margin-bottom' => 16,
+        'header-spacing' => 5,
+        'footer-spacing' => 5,
+    ])
+;
+
+$pdf = $pdfBuilder->getPdf();
+$pdf->save(''
+```
+
+## Loading content
+
+The PDF builder takes any of the following asset types as a data source.
+
+* DataAsset: the most basic form: contains only a string holding the text or HTML.
+* FileAsset: loads contents from a given file name.
+* TemplateAsset: loads contents from a Twig template and optional parameters.
+* ControllerAsset: loads contents from a controller action and optional parameters.
+* CachedAsset: caches contents by wrapping any of the above assets.
+
+The asset factory
 
 Use [Composer](https://getcomposer.org/) to install the library.
 
 ``` bash
 $ composer require endroid/pdf
 ```
+
+Now you can create the PDF builder as follows.
+
+```php
+$snappy = new Snappy(__DIR__.'/../vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64');
+$pdfBuilder = new PdfBuilder(new Pdf($snappy), new AssetFactory());
+```
+
+If you use Symfony Flex the builder is already autowired and ready for injection.
+
+```php
+public function __construct(PdfBuilder $pdfBuilder)
+{
+    $this->pdfBuilder = $pdfBuilder;
+}
+```
+
+## Components
+
+## PDF
+
+
+
+## PDF Builder
+
+
 
 ## Asset Factory
 
@@ -57,57 +122,6 @@ twig extension to embed it as a base64 encoded string.
 }
 </style>
 ```
-
-## Usage (in Symfony)
-
-When installed with Flex, a recipe is executed that registers the Pdf class as
-a service and automatically injects available services. For instance when
-templating is available you can use Twig based assets and when an HTTP kernel
-and request stack are available controller actions can be used as asset.
-
-```php
-<?php
-
-namespace App\Controller\Pdf;
-
-use Endroid\Pdf\Builder\PdfBuilder;
-use Endroid\Pdf\Response\InlinePdfResponse;
-use Symfony\Component\HttpFoundation\Response;
-
-final class PdfController
-{
-    private $pdfBuilder;
-
-    public function __construct(PdfBuilder $pdfBuilder)
-    {
-        $this->pdfBuilder = $pdfBuilder;
-    }
-    
-    public function __invoke(): Response
-    {
-        $this->pdfBuilder
-            ->setCover(['controller' => CoverController::class, 'cache' => 'cover'])
-            ->setTableOfContents(['template' => 'pdf/table_of_contents.xml.twig', 'cache' => 'toc'])
-            ->setHeader(['template' => 'pdf/header.html.twig', 'cache' => 'header'])
-            ->setFooter(['template' => 'pdf/footer.html.twig', 'cache' => 'footer'])
-            ->setContent(['controller' => ContentController::class, 'cache' => 'content'])
-            ->setOptions([
-                'margin-top' => 16,
-                'margin-bottom' => 16,
-                'header-spacing' => 5,
-                'footer-spacing' => 5,
-            ])
-        ;
-    
-        return new InlinePdfResponse($this->pdfBuilder->getPdf());
-    }
-}
-```
-
-In projects other than Symfony you need to instantiate the Pdf object yourself
-and inject the Snappy instance. Optionally you can inject templating, the HTTP
-kernel and the request stack to enable all types of assets. The data and file
-asset have no dependencies and will always be available.
 
 ## Versioning
 

@@ -9,8 +9,6 @@
 
 namespace Endroid\Pdf;
 
-use Endroid\Pdf\Asset\AbstractAsset;
-use Endroid\Pdf\Asset\DataAsset;
 use iio\libmergepdf\Merger;
 use iio\libmergepdf\Pages;
 use Knp\Snappy\Pdf as Snappy;
@@ -27,9 +25,9 @@ final class Pdf
         $this->coverStrategy = CoverStrategy::create(CoverStrategy::AUTO);
     }
 
-    public function setCover(AbstractAsset $asset): void
+    public function setCover(string $data): void
     {
-        $this->snappy->setOption('cover', $asset->getData());
+        $this->snappy->setOption('cover', $data);
     }
 
     public function setCoverStrategy(CoverStrategy $coverStrategy): void
@@ -37,25 +35,25 @@ final class Pdf
         $this->coverStrategy = $coverStrategy;
     }
 
-    public function setTableOfContents(AbstractAsset $asset): void
+    public function setTableOfContents(string $data): void
     {
         $this->snappy->setOption('toc', true);
-        $this->snappy->setOption('xsl-style-sheet', $asset->getData());
+        $this->snappy->setOption('xsl-style-sheet', $data);
     }
 
-    public function setHeader(AbstractAsset $asset): void
+    public function setHeader(string $data): void
     {
-        $this->snappy->setOption('header-html', $asset->getData());
+        $this->snappy->setOption('header-html', $data);
     }
 
-    public function setFooter(AbstractAsset $asset): void
+    public function setFooter(string $data): void
     {
-        $this->snappy->setOption('footer-html', $asset->getData());
+        $this->snappy->setOption('footer-html', $data);
     }
 
-    public function setContent(AbstractAsset $asset): void
+    public function setContent(string $data): void
     {
-        $this->content = $asset;
+        $this->content = $data;
     }
 
     public function setOptions(array $options = []): void
@@ -70,7 +68,7 @@ final class Pdf
             $this->snappy->setOption('cover', null);
         }
 
-        $pdf = $this->snappy->getOutputFromHtml($this->content->getData());
+        $pdf = $this->snappy->getOutputFromHtml($this->content);
 
         if ($coverPdf instanceof self) {
             $pdfMerger = new Merger();
@@ -95,7 +93,7 @@ final class Pdf
         }
 
         $coverPdf = clone $this;
-        $coverPdf->setContent(new DataAsset($options['cover']));
+        $coverPdf->setContent($options['cover']);
         $coverPdf->setOptions([
             'cover' => null,
             'toc' => null,
