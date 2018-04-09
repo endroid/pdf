@@ -5,3 +5,4 @@ services:
         public: false
 
     Endroid\Pdf\Pdf: ~
+    Endroid\Pdf\Builder\PdfBuilder: ~
