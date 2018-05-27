@@ -14,7 +14,7 @@
     "require": {
         "php": ">=7.1",
         "endroid/asset": "^1.0.1",
-        "endroid/embed": "^1.0",
+        "endroid/embed": "^1.0.1",
         "endroid/installer": "^1.0.3",
         "iio/libmergepdf": "^3.0",
         "knplabs/knp-snappy": "^1.0"
