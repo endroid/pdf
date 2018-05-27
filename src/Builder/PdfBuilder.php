@@ -9,7 +9,7 @@
 
 namespace Endroid\Pdf\Builder;
 
-use Endroid\Asset\AbstractAsset;
+use Endroid\Asset\AssetInterface;
 use Endroid\Asset\Factory\AssetFactory;
 use Endroid\Pdf\CoverStrategy;
 use Endroid\Pdf\Pdf;
@@ -77,8 +77,8 @@ final class PdfBuilder
         return $this->pdf;
     }
 
-    private function createAsset(array $options): AbstractAsset
+    private function createAsset(array $options): AssetInterface
     {
-        return $this->assetFactory->create($options);
+        return $this->assetFactory->create(null, $options);
     }
 }
