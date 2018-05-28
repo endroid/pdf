@@ -78,9 +78,9 @@ service configuration.
 
 ## Usage
 
-If [endroid/installer](https://github.com/endroid/installer) detects Symfony
-the builder is already autowired and you only need to provide the correct type
-hint to retrieve the builder. Now you can use it like this.
+If [endroid/installer](https://github.com/endroid/installer) detects the
+framework the builder is already autowired and you only need to provide the
+correct type hint to retrieve the builder. Now you can use it like this.
 
 ```php
 $pdfBuilder
