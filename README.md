@@ -80,7 +80,7 @@ service configuration.
 
 If [endroid/installer](https://github.com/endroid/installer) detects the
 framework the builder is already autowired and you only need to provide the
-correct type hint to retrieve the builder. Now you can use it like this.
+correct type hint to retrieve it. Now you can use it like this to build a PDF.
 
 ```php
 $pdfBuilder
@@ -90,7 +90,7 @@ $pdfBuilder
         'cache_expires_after' => 3600,
     ])
     ->setTableOfContents([
-        'path' => '/var/www/html/table_of_contents',
+        'path' => '/var/www/html/table_of_contents.xml',
         'cache_key' => 'toc',
     ])
     ->setHeader([
