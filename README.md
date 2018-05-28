@@ -9,23 +9,100 @@
 
 Library for easy PDF generation built around wkhtmltopdf and Snappy.
 
-## Features
+## Easy data loading
 
-* Use any type of source: a HTML string, a file, a template or a controller.
-* Add a cover, table of contents, header, footer or contents from any source.
-* Embed resources like fonts, images, stylesheets and scripts.
-* Cache resources to improve performance.
+When you generate a PDF you need to make sure you pass the right contents to
+the PDF object. This data can come from any source (i.e. a file, a URL, a controller)
+and some of these impose a performance hit so you often want to cache some of
+these contents instead of loading the data every time you generate the PDF.
 
-## Example usage
+The [endroid/asset](https://github.com/endroid/asset) takes this burden away by
+allowing you to define your assets via a simple array of options. The asset
+factory and guesser make sure the right type of asset is created and even
+provide a so called cache asset that wraps any other asset.
 
 ```php
+$this->pdfBuilder
+    ->setCover([
+        'controller' => CoverController::class,
+        'parameters' => ['title' => 'My PDF', 'date' => new DateTime()],
+        'cache_key' => 'cover',
+        'cache_expires_after' => 3600,
+    ])
+;
+```
 
+For more information [read the documentation](https://github.com/endroid/asset).
+
+## Efficient data loading
+
+An HTML page can contain a number of external resources, each triggering a
+separate request. However during PDF generation this can lead to performance or
+even stability issues. Therefor we need the number of requests to be as low as
+possible.
+
+The [endroid/embed](https://github.com/endroid/embed) library helps you
+minimize the number of assets to load during PDF generation by allowing you to
+embed external resources via a Twig extension. You can use this extension to
+embed resources like fonts, stylesheets, scripts etc.
+
+```php
+<link rel="stylesheet" href="{{ embed(asset('/styles.css')) }}">
+
+<style>
+@font-face {
+    font-family: 'SCP';
+    font-weight: normal;
+    src: url('{{ embed('https://fontlibrary.org/scp.ttf') }}');
+}
+</style>
+```
+
+For more information [read the documentation](https://github.com/endroid/embed).
+
+## Installation
+
+Use [Composer](https://getcomposer.org/) to install the library.
+
+``` bash
+$ composer require endroid/pdf
+```
+
+Automatic framework configuration is provided by
+[endroid/installer](https://github.com/endroid/installer). Please note that by
+default all asset types are installed. If any of the asset types is unsupported
+(because you miss a required service) you can uncomment the adapter in the
+service configuration.
+
+## Usage
+
+If [endroid/installer](https://github.com/endroid/installer) detects Symfony
+the builder is already autowired and you only need to use the correct type
+hint to retrieve the builder.
+
+```php
 $pdfBuilder
-    ->setCover(['controller' => CoverController::class])
-    ->setTableOfContents(['template' => 'pdf/table_of_contents.xml.twig', 'cache' => 'toc'])
-    ->setHeader(['file' => 'header.html'])
-    ->setFooter(['template' => 'pdf/footer.html.twig', 'cache' => 'footer'])
-    ->setContent(['controller' => ContentController::class])
+    ->setCover([
+        'controller' => CoverController::class,
+        'cache_key' => 'cover',
+        'cache_expires_after' => 3600,
+    ])
+    ->setTableOfContents([
+        'path' => '/var/www/html/table_of_contents',
+        'cache_key' => 'toc',
+    ])
+    ->setHeader([
+        'template' => 'pdf/header.html.twig',
+        'cache_key' => 'header',
+    ])
+    ->setFooter([
+        'template' => 'pdf/footer.html.twig',
+        'cache_key' => 'footer',
+    ])
+    ->setContent([
+        'url' => 'http://endroid.nl/',
+        'cache_key' => 'content',
+    ])
     ->setOptions([
         'margin-top' => 16,
         'margin-bottom' => 16,
@@ -35,92 +112,31 @@ $pdfBuilder
 ;
 
 $pdf = $pdfBuilder->getPdf();
-$pdf->save(''
+
+// Create a response object
+$response = new InlinePdfResponse($pdf);
+
+// Or output directly
+header('Content-type: application/pdf');
+echo $pdf->generate();
 ```
 
-## Loading content
+## Custom bootstrapping
 
-The PDF builder takes any of the following asset types as a data source.
-
-* DataAsset: the most basic form: contains only a string holding the text or HTML.
-* FileAsset: loads contents from a given file name.
-* TemplateAsset: loads contents from a Twig template and optional parameters.
-* ControllerAsset: loads contents from a controller action and optional parameters.
-* CachedAsset: caches contents by wrapping any of the above assets.
-
-The asset factory
-
-Use [Composer](https://getcomposer.org/) to install the library.
-
-``` bash
-$ composer require endroid/pdf
-```
-
-Now you can create the PDF builder as follows.
+When no autowiring is available you can initialize the builder like this.
+Make sure you do this only once and create a service you can reuse.
 
 ```php
 $snappy = new Snappy(__DIR__.'/../vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64');
-$pdfBuilder = new PdfBuilder(new Pdf($snappy), new AssetFactory());
-```
 
-If you use Symfony Flex the builder is already autowired and ready for injection.
+// done automatically when using autowiring
+$assetFactory = new AssetFactory();
+$assetFactory->add(new DataAssetFactoryAdapter());
+$assetFactory->add(new ControllerAssetFactoryAdapter($kernel, $requestStack));
+$assetFactory->add(new TemplateAssetFactoryAdapter($twig));
+... // depending on what services you have available
 
-```php
-public function __construct(PdfBuilder $pdfBuilder)
-{
-    $this->pdfBuilder = $pdfBuilder;
-}
-```
-
-## Components
-
-## PDF
-
-
-
-## PDF Builder
-
-
-
-## Asset Factory
-
-Each source of content, like the cover, the header / footer or the contents of
-the PDF can be rendered from different sources. You can specify a controller
-action, render a template, load a file or use a plain old string as source.
-
-Some assets require external dependencies. For instance, to render a controller
-action you need a kernel, to render a template you need a templating engine and
-to create a cached asset you need a cache adapter. The factory lets you create
-assets of any type without worrying of additional dependencies.
-
-## Twig Extension
-
-PDF Generators have a bad reputation in resolving URLs like for fonts, style
-sheets, scripts or images. This is mainly caused by the fact that PDF generation
-is executed as a process that has no knowledge of URLs but only looks at internal
-file paths. Also, header and footer files are often loaded multiple times (once
-for each page) so we don't want external resources to be fetched every time.
-
-The library comes with a Twig extension that you can use to embed such resources.
-Whether you have a font, an image or an external stylesheet, you can can use the
-twig extension to embed it as a base64 encoded string.
-
-```php
-<link rel="stylesheet" href="{{ embed('http://hostname/styles.css') }}">
-
-<style>
-@font-face {
-    font-family: 'SCP';
-    font-weight: normal;
-    src: url('{{ embed('https://fontlibrary.org/scp.ttf') }}');
-}
-.cover {
-    background-image: url('{{ embed('http://pipsum.com/793x1122.jpg') }}');
-    width: 793px;
-    height: 1072px;
-    padding-top: 50px;
-}
-</style>
+$pdfBuilder = new PdfBuilder(new Pdf($snappy), $assetFactory);
 ```
 
 ## Versioning
