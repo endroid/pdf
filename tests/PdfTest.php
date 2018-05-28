@@ -9,6 +9,8 @@
 
 namespace Endroid\Pdf\Tests;
 
+use Endroid\Asset\DataAsset;
+use Endroid\Asset\Factory\Adapter\DataAssetFactoryAdapter;
 use Endroid\Asset\Factory\AssetFactory;
 use Endroid\Pdf\Builder\PdfBuilder;
 use Endroid\Pdf\Pdf;
@@ -22,13 +24,12 @@ class PdfTest extends TestCase
         $snappy = new Snappy(__DIR__.'/../vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64');
         $pdf = new Pdf($snappy);
         $assetFactory = new AssetFactory();
+        $assetFactory->addFactory(new DataAssetFactoryAdapter());
         $pdfBuilder = new PdfBuilder($pdf, $assetFactory);
 
         $pdfBuilder
             ->setContent(['data' => '<html><head><title>PDF</title></head><body>PDF Content</body></html>'])
-            ->setOptions([
-                'margin-top' => 10,
-            ])
+            ->setOptions(['margin-top' => 10])
         ;
 
         $pdf = $pdfBuilder->getPdf();
