@@ -7,12 +7,14 @@
 [![Total Downloads](http://img.shields.io/packagist/dt/endroid/pdf.svg)](https://packagist.org/packages/endroid/pdf)
 [![License](http://img.shields.io/packagist/l/endroid/pdf.svg)](https://packagist.org/packages/endroid/pdf)
 
-Library for easy PDF generation built around wkhtmltopdf and Snappy.
+Library for easy PDF generation built around wkhtmltopdf and Snappy. Click
+[here](https://endroid.nl/pdf) for an example. Please note this example takes
+some time to load because it contains a lot of pages and no caching is applied.
 
 ## Easy data loading
 
 When you generate a PDF you need to make sure you pass the right contents to
-the PDF object. This data can come from any source (i.e. a file, a URL, a controller)
+the PDF object. This data can come from any source (a file, a URL, a controller)
 and some of these impose a performance hit so you often want to cache some of
 these contents instead of loading the data every time you generate the PDF.
 
