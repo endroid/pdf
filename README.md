@@ -36,7 +36,7 @@ $this->pdfBuilder
 
 For more information [read the documentation](https://github.com/endroid/asset).
 
-## Efficient data loading
+## Handling external resources
 
 An HTML page can contain a number of external resources, each triggering a
 separate request. However during PDF generation this can lead to performance or
