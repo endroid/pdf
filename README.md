@@ -70,6 +70,9 @@ Use [Composer](https://getcomposer.org/) to install the library.
 $ composer require endroid/pdf
 ```
 
+If you install the library in Symfony you can install the knplabs/snappy-bundle
+to make sure the Pdf class is registered and autowired.
+
 Automatic framework configuration is provided by
 [endroid/installer](https://github.com/endroid/installer). Please note that by
 default all asset types are installed. If any of the asset types is unsupported
