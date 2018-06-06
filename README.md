@@ -11,6 +11,9 @@ Library for easy PDF generation built around wkhtmltopdf and Snappy. Click
 [here](https://endroid.nl/pdf) for an example. Please note this example takes
 some time to load because it contains a lot of pages and no caching is applied.
 
+Read the [blog](https://medium.com/@endroid/pdf-generation-in-symfony-3080702353b)
+for more information on why I created this library.
+
 ## Easy data loading
 
 When you generate a PDF you need to make sure you pass the right contents to
