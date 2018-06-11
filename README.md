@@ -12,7 +12,7 @@ Library for easy PDF generation built around wkhtmltopdf and Snappy. Click
 some time to load because it contains a lot of pages and no caching is applied.
 
 Read the [blog](https://medium.com/@endroid/pdf-generation-in-symfony-3080702353b)
-for more information on why I created this library.
+for more information on why I created this library and how to use it.
 
 ## Easy data loading
 
@@ -33,6 +33,7 @@ $this->pdfBuilder
         'parameters' => ['title' => 'My PDF', 'date' => new DateTime()],
         'cache_key' => 'cover',
         'cache_expires_after' => 3600,
+        'cache_clear' => true, // use to clear any previously cached data
     ])
 ;
 ```
@@ -49,7 +50,7 @@ possible.
 The [endroid/embed](https://github.com/endroid/embed) library helps you
 minimize the number of assets to load during PDF generation by allowing you to
 embed external resources via a Twig extension. You can use this extension to
-embed resources like fonts, stylesheets, scripts etc.
+embed resources like fonts, stylesheets and scripts.
 
 ```php
 <link rel="stylesheet" href="{{ embed(asset('/styles.css')) }}">
@@ -63,30 +64,13 @@ embed resources like fonts, stylesheets, scripts etc.
 </style>
 ```
 
-For more information [read the documentation](https://github.com/endroid/embed).
+For more information you can [read the documentation](https://github.com/endroid/embed).
 
-## Installation
+## The PDF builder
 
-Use [Composer](https://getcomposer.org/) to install the library.
-
-``` bash
-$ composer require endroid/pdf
-```
-
-If you install the library in Symfony you can install the knplabs/snappy-bundle
-to make sure the Pdf class is registered and autowired.
-
-Automatic framework configuration is provided by
-[endroid/installer](https://github.com/endroid/installer). Please note that by
-default all asset types are installed. If any of the asset types is unsupported
-(because you miss a required service) you can uncomment the adapter in the
-service configuration.
-
-## Usage
-
-If [endroid/installer](https://github.com/endroid/installer) detects the
-framework the builder is already autowired and you only need to provide the
-correct type hint to retrieve it. Now you can use it like this to build a PDF.
+When [endroid/installer](https://github.com/endroid/installer) detects Symfony
+the builder is automatically wired and you can immediately start using it to
+build a PDF. This is an example of how you can use the builder.
 
 ```php
 $pdfBuilder
@@ -129,20 +113,42 @@ header('Content-type: application/pdf');
 echo $pdf->generate();
 ```
 
-## Custom bootstrapping
+## Installation
 
-When no autowiring is available you can initialize the builder like this.
-Make sure you do this only once and create a service you can reuse.
+Use [Composer](https://getcomposer.org/) to install the library.
+
+``` bash
+$ composer require endroid/pdf
+```
+
+### Symfony
+
+When you use Symfony, the [installer](https://github.com/endroid/installer)
+makes sure that services are automatically wired. If the Snapp\Pdf service is
+not registered yet, make sure you create a service definition for it or install
+the knplabs/snappy-bundle along with the library.
+
+``` bash
+$ composer require endroid/pdf knplabs/snappy-bundle
+```
+
+Also, if any of the asset types is unsupported (for instance because you have
+no cache component or Twig available) or if you simply don't want some to be
+registered you can uncomment the adapter via the service configuration.
+
+### Bootstrapping the PDF builder
+
+When no autowiring is available you need to instantiate and wire the necessary
+dependencies yourself. You can do so via a bootstrap file for instance.
 
 ```php
 $snappy = new Snappy(__DIR__.'/../vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64');
 
-// done automatically when using autowiring
 $assetFactory = new AssetFactory();
 $assetFactory->add(new DataAssetFactoryAdapter());
 $assetFactory->add(new ControllerAssetFactoryAdapter($kernel, $requestStack));
 $assetFactory->add(new TemplateAssetFactoryAdapter($twig));
-... // depending on what services you have available
+...
 
 $pdfBuilder = new PdfBuilder(new Pdf($snappy), $assetFactory);
 ```
