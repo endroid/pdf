@@ -33,7 +33,7 @@ $this->pdfBuilder
         'parameters' => ['title' => 'My PDF', 'date' => new DateTime()],
         'cache_key' => 'cover',
         'cache_expires_after' => 3600,
-        'cache_clear' => true, // use to clear any previously cached data
+        'cache_clear' => true, // use to purge any previously cached data
     ])
 ;
 ```
