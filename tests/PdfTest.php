@@ -9,7 +9,6 @@
 
 namespace Endroid\Pdf\Tests;
 
-use Endroid\Asset\DataAsset;
 use Endroid\Asset\Factory\Adapter\DataAssetFactoryAdapter;
 use Endroid\Asset\Factory\AssetFactory;
 use Endroid\Pdf\Builder\PdfBuilder;
