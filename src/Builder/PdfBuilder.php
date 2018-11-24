@@ -34,35 +34,35 @@ final class PdfBuilder
             unset($options['strategy']);
         }
 
-        $this->pdf->setCover($this->createAsset($options));
+        $this->pdf->setCover(strval($this->createAsset($options)));
 
         return $this;
     }
 
     public function setTableOfContents(array $options): self
     {
-        $this->pdf->setTableOfContents($this->createAsset($options));
+        $this->pdf->setTableOfContents(strval($this->createAsset($options)));
 
         return $this;
     }
 
     public function setHeader(array $options): self
     {
-        $this->pdf->setHeader($this->createAsset($options));
+        $this->pdf->setHeader(strval($this->createAsset($options)));
 
         return $this;
     }
 
     public function setFooter(array $options): self
     {
-        $this->pdf->setFooter($this->createAsset($options));
+        $this->pdf->setFooter(strval($this->createAsset($options)));
 
         return $this;
     }
 
     public function setContent(array $options): self
     {
-        $this->pdf->setContent($this->createAsset($options));
+        $this->pdf->setContent(strval($this->createAsset($options)));
 
         return $this;
     }
