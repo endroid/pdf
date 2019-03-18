@@ -124,7 +124,7 @@ $ composer require endroid/pdf
 ### Symfony
 
 When you use Symfony, the [installer](https://github.com/endroid/installer)
-makes sure that services are automatically wired. If the Snapp\Pdf service is
+makes sure that services are automatically wired. If the Snappy\Pdf service is
 not registered yet, make sure you create a service definition for it or install
 the knplabs/snappy-bundle along with the library.
 
