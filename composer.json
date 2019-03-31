@@ -12,16 +12,17 @@
         }
     ],
     "require": {
-        "php": ">=7.1",
+        "php": ">=7.2",
         "endroid/asset": "^2.0.1",
         "endroid/embed": "^1.0.1",
-        "endroid/installer": "^1.0.3",
+        "endroid/installer": "^1.1.5",
         "h4cc/wkhtmltopdf-amd64": "^0.12.4",
         "iio/libmergepdf": "^3.0",
-        "knplabs/knp-snappy": "^1.0"
+        "knplabs/knp-snappy": "^1.0",
+        "symfony/http-foundation": "^3.4|^4.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.7|^6.0"
+        "endroid/test": "^1.1.2"
     },
     "autoload": {
         "psr-4": {

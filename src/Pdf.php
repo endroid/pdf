@@ -74,8 +74,8 @@ final class Pdf
 
         if ($coverPdf instanceof self) {
             $pdfMerger = new Merger();
-            $pdfMerger->addRaw($coverPdf, new Pages('1'));
-            $pdfMerger->addRaw($pdf);
+            $pdfMerger->addRaw((string) $coverPdf, new Pages('1'));
+            $pdfMerger->addRaw((string) $pdf);
             $pdf = $pdfMerger->merge();
         }
 
