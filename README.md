@@ -106,7 +106,7 @@ $pdfBuilder
 $pdf = $pdfBuilder->getPdf();
 
 // Create a response object
-$response = new InlinePdfResponse($pdf);
+$response = InlinePdfResponse::createFromPdf($pdf);
 
 // Or output directly
 header('Content-type: application/pdf');

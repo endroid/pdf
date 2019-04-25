@@ -16,11 +16,16 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 final class InlinePdfResponse extends Response
 {
-    public function __construct(string $content = '')
+    public function __construct($content = '', int $status = 200, array $headers = [])
     {
-        parent::__construct($content);
+        parent::__construct($content, $status, $headers);
 
-        $this->headers->add(['Content-Type' => 'application/pdf']);
-        $this->headers->add(['Content-Disposition' => $this->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_INLINE, 'output.pdf')]);
+        $this->headers->add([
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => $this->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_INLINE,
+                'output.pdf'
+            ),
+        ]);
     }
 }

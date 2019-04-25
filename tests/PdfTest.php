@@ -24,16 +24,15 @@ class PdfTest extends TestCase
     {
         $snappy = new Snappy(__DIR__.'/../vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64');
         $pdf = new Pdf($snappy);
+
         $assetFactory = new AssetFactory();
         $assetFactory->addFactory(new DataAssetFactoryAdapter());
-        $pdfBuilder = new PdfBuilder($pdf, $assetFactory);
 
-        $pdfBuilder
+        $pdf = (new PdfBuilder($pdf, $assetFactory))
             ->setContent(['data' => '<html><head><title>PDF</title></head><body>PDF Content</body></html>'])
             ->setOptions(['margin-top' => 10])
+            ->getPdf()
         ;
-
-        $pdf = $pdfBuilder->getPdf();
 
         $this->assertStringStartsWith('%PDF', $pdf->generate());
     }
