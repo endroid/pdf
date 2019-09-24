@@ -18,8 +18,10 @@ use Knp\Snappy\Pdf as Snappy;
 final class Pdf
 {
     private $snappy;
-    private $content;
     private $coverStrategy;
+
+    /** @var string */
+    private $content;
 
     public function __construct(Snappy $snappy)
     {

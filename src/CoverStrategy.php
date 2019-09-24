@@ -31,12 +31,12 @@ final class CoverStrategy
         $this->name = $name;
     }
 
-    public static function create(string $name)
+    public static function create(string $name): self
     {
         return new self($name);
     }
 
-    public function equals(string $name)
+    public function equals(string $name): bool
     {
         return $this->name === $name;
     }

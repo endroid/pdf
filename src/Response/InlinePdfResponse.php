@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 final class InlinePdfResponse extends Response
 {
-    public function __construct($content = '', int $status = 200, array $headers = [])
+    public function __construct(string $content = '', int $status = 200, array $headers = [])
     {
         parent::__construct($content, $status, $headers);
 
