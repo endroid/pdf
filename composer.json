@@ -15,14 +15,18 @@
         "php": ">=7.2",
         "endroid/asset": "^2.0.1",
         "endroid/embed": "^1.0.1",
-        "endroid/installer": "^1.1.5",
+        "endroid/installer": "^1.2.2",
         "h4cc/wkhtmltopdf-amd64": "^0.12.4",
         "iio/libmergepdf": "^3.0",
         "knplabs/knp-snappy": "^1.0",
-        "symfony/http-foundation": "^3.4||^4.2.12||^5.0"
+        "symfony/http-foundation": "^3.4||^4.4||^5.0"
     },
     "require-dev": {
-        "endroid/test": "dev-master"
+        "endroid/quality": "dev-master"
+    },
+    "suggest": {
+        "roave/security-advisories": "Avoids installation of package versions with vulnerabilities",
+        "symfony/security-checker": "Checks your composer.lock for vulnerabilities"
     },
     "autoload": {
         "psr-4": {
