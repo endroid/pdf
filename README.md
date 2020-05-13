@@ -129,7 +129,7 @@ not registered yet, make sure you create a service definition for it or install
 the knplabs/snappy-bundle along with the library.
 
 ``` bash
-$ composer require endroid/pdf knplabs/snappy-bundle
+$ composer require endroid/pdf knplabs/knp-snappy-bundle
 ```
 
 Also, if any of the asset types is unsupported (for instance because you have
