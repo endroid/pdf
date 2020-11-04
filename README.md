@@ -8,7 +8,7 @@
 [![License](http://img.shields.io/packagist/l/endroid/pdf.svg)](https://packagist.org/packages/endroid/pdf)
 
 Library for easy PDF generation built around wkhtmltopdf and Snappy. Click
-[here](https://endroid.nl/pdf) for an example. Please note this example takes
+[here](https://endroid.nl/play/pdf) for an example. Please note this example takes
 some time to load because it contains a lot of pages and no caching is applied.
 
 Read the [blog](https://medium.com/@endroid/pdf-generation-in-symfony-3080702353b)
