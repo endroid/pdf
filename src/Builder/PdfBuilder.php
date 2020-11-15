@@ -2,13 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * (c) Jeroen van den Enden <info@endroid.nl>
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- */
-
 namespace Endroid\Pdf\Builder;
 
 use Endroid\Asset\AssetInterface;
@@ -18,8 +11,8 @@ use Endroid\Pdf\Pdf;
 
 final class PdfBuilder
 {
-    private $pdf;
-    private $assetFactory;
+    private Pdf $pdf;
+    private AssetFactory $assetFactory;
 
     public function __construct(Pdf $pdf, AssetFactory $assetFactory)
     {
@@ -27,6 +20,7 @@ final class PdfBuilder
         $this->assetFactory = $assetFactory;
     }
 
+    /** @param array<mixed> $options */
     public function setCover(array $options): self
     {
         if (isset($options['strategy'])) {
@@ -39,6 +33,7 @@ final class PdfBuilder
         return $this;
     }
 
+    /** @param array<mixed> $options */
     public function setTableOfContents(array $options): self
     {
         $this->pdf->setTableOfContents(strval($this->createAsset($options)));
@@ -46,6 +41,7 @@ final class PdfBuilder
         return $this;
     }
 
+    /** @param array<mixed> $options */
     public function setHeader(array $options): self
     {
         $this->pdf->setHeader(strval($this->createAsset($options)));
@@ -53,6 +49,7 @@ final class PdfBuilder
         return $this;
     }
 
+    /** @param array<mixed> $options */
     public function setFooter(array $options): self
     {
         $this->pdf->setFooter(strval($this->createAsset($options)));
@@ -60,6 +57,7 @@ final class PdfBuilder
         return $this;
     }
 
+    /** @param array<mixed> $options */
     public function setContent(array $options): self
     {
         $this->pdf->setContent(strval($this->createAsset($options)));
@@ -67,6 +65,7 @@ final class PdfBuilder
         return $this;
     }
 
+    /** @param array<mixed> $options */
     public function setOptions(array $options): self
     {
         $this->pdf->setOptions($options);
@@ -79,6 +78,7 @@ final class PdfBuilder
         return $this->pdf;
     }
 
+    /** @param array<mixed> $options */
     private function createAsset(array $options): AssetInterface
     {
         return $this->assetFactory->create(null, $options);

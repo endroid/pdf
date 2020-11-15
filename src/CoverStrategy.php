@@ -20,7 +20,7 @@ final class CoverStrategy
     const MERGE = 'merge';
     const PARAM = 'param';
 
-    private $name;
+    private string $name;
 
     private function __construct(string $name)
     {
@@ -41,10 +41,16 @@ final class CoverStrategy
         return $this->name === $name;
     }
 
+    /** @return array<string> */
     public function getAvailableOptions(): array
     {
         $reflectionClass = new ReflectionClass(__CLASS__);
+        $constants = (array) $reflectionClass->getConstants();
 
-        return $reflectionClass->getConstants();
+        foreach ($constants as $key => $constant) {
+            $constants[$key] = strval($constant);
+        }
+
+        return $constants;
     }
 }

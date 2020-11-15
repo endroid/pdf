@@ -2,13 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * (c) Jeroen van den Enden <info@endroid.nl>
- *
- * This source file is subject to the MIT license that is bundled
- * with this source code in the file LICENSE.
- */
-
 namespace Endroid\Pdf;
 
 use iio\libmergepdf\Merger;
@@ -17,11 +10,9 @@ use Knp\Snappy\Pdf as Snappy;
 
 final class Pdf
 {
-    private $snappy;
-    private $coverStrategy;
-
-    /** @var string */
-    private $content;
+    private Snappy $snappy;
+    private CoverStrategy $coverStrategy;
+    private string $content;
 
     public function __construct(Snappy $snappy)
     {
@@ -60,6 +51,7 @@ final class Pdf
         $this->content = $data;
     }
 
+    /** @param array<mixed> $options */
     public function setOptions(array $options = []): void
     {
         $this->snappy->setOptions($options);
