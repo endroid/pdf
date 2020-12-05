@@ -20,7 +20,8 @@ final class CoverStrategy
     const MERGE = 'merge';
     const PARAM = 'param';
 
-    private string $name;
+    /** @var string */
+    private $name;
 
     private function __construct(string $name)
     {
