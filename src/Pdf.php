@@ -8,7 +8,7 @@ use iio\libmergepdf\Merger;
 use iio\libmergepdf\Pages;
 use Knp\Snappy\Pdf as Snappy;
 
-final class Pdf
+final class Pdf implements PdfInterface
 {
     /** @var Snappy */
     private $snappy;
