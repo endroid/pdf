@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class PdfTest extends TestCase
 {
-    public function testNoTestsYet()
+    public function testGeneratePdf()
     {
         $snappy = new Snappy(__DIR__.'/../vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64');
         $snappyPdf = new Pdf($snappy);

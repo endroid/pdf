@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Endroid\Pdf;
 
-use iio\libmergepdf\Merger;
-use iio\libmergepdf\Pages;
-use Knp\Snappy\Pdf as Snappy;
-
 interface PdfInterface
 {
     public function setCover(string $data): void;

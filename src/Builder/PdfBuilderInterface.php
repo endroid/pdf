@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Endroid\Pdf\Builder;
 
-use Endroid\Asset\AssetInterface;
-use Endroid\Asset\Factory\AssetFactory;
-use Endroid\Pdf\CoverStrategy;
-use Endroid\Pdf\Pdf;
 use Endroid\Pdf\PdfInterface;
 
 interface PdfBuilderInterface
