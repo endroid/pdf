@@ -7,6 +7,7 @@ namespace Endroid\Pdf\Response;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
+/** @psalm-suppress  */
 final class InlinePdfResponse extends Response
 {
     /** @param array<string, string> $headers */

@@ -16,12 +16,11 @@ use ReflectionClass;
 
 final class CoverStrategy
 {
-    const AUTO = 'auto';
-    const MERGE = 'merge';
-    const PARAM = 'param';
+    public const AUTO = 'auto';
+    public const MERGE = 'merge';
+    public const PARAM = 'param';
 
-    /** @var string */
-    private $name;
+    private string $name;
 
     private function __construct(string $name)
     {
@@ -46,7 +45,7 @@ final class CoverStrategy
     public function getAvailableOptions(): array
     {
         $reflectionClass = new ReflectionClass(__CLASS__);
-        $constants = (array) $reflectionClass->getConstants();
+        $constants = $reflectionClass->getConstants();
 
         foreach ($constants as $key => $constant) {
             $constants[$key] = strval($constant);

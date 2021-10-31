@@ -10,14 +10,9 @@ use Knp\Snappy\Pdf as Snappy;
 
 final class Pdf implements PdfInterface
 {
-    /** @var Snappy */
-    private $snappy;
-
-    /** @var CoverStrategy */
-    private $coverStrategy;
-
-    /** @var string */
-    private $content;
+    private Snappy $snappy;
+    private CoverStrategy $coverStrategy;
+    private string $content;
 
     public function __construct(Snappy $snappy)
     {
@@ -74,7 +69,7 @@ final class Pdf implements PdfInterface
         if ($coverPdf instanceof self) {
             $pdfMerger = new Merger();
             $pdfMerger->addRaw((string) $coverPdf, new Pages('1'));
-            $pdfMerger->addRaw((string) $pdf);
+            $pdfMerger->addRaw($pdf);
             $pdf = $pdfMerger->merge();
         }
 

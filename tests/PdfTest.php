@@ -15,7 +15,12 @@ class PdfTest extends TestCase
 {
     public function testGeneratePdf()
     {
-        $snappy = new Snappy(__DIR__.'/../vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64');
+        $path = '/usr/bin/wkhtmltopdf';
+        if (!is_file($path)) {
+            $path = __DIR__.'/../vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64';
+        }
+
+        $snappy = new Snappy($path);
         $snappyPdf = new Pdf($snappy);
 
         $assetFactory = new AssetFactory();

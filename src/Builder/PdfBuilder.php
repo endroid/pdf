@@ -11,11 +11,8 @@ use Endroid\Pdf\Pdf;
 
 final class PdfBuilder
 {
-    /** @var Pdf */
-    private $pdf;
-
-    /** @var AssetFactory */
-    private $assetFactory;
+    private Pdf $pdf;
+    private AssetFactory $assetFactory;
 
     public function __construct(Pdf $pdf, AssetFactory $assetFactory)
     {
