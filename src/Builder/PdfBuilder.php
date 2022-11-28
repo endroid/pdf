@@ -11,13 +11,10 @@ use Endroid\Pdf\Pdf;
 
 final class PdfBuilder
 {
-    private Pdf $pdf;
-    private AssetFactory $assetFactory;
-
-    public function __construct(Pdf $pdf, AssetFactory $assetFactory)
-    {
-        $this->pdf = $pdf;
-        $this->assetFactory = $assetFactory;
+    public function __construct(
+        private Pdf $pdf,
+        private AssetFactory $assetFactory
+    ) {
     }
 
     /** @param array<mixed> $options */

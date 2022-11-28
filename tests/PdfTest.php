@@ -11,9 +11,9 @@ use Endroid\Pdf\Pdf;
 use Knp\Snappy\Pdf as Snappy;
 use PHPUnit\Framework\TestCase;
 
-class PdfTest extends TestCase
+final class PdfTest extends TestCase
 {
-    public function testGeneratePdf()
+    public function testGeneratePdf(): void
     {
         $path = '/usr/bin/wkhtmltopdf';
         if (!is_file($path)) {

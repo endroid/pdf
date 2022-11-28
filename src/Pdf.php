@@ -10,13 +10,12 @@ use Knp\Snappy\Pdf as Snappy;
 
 final class Pdf implements PdfInterface
 {
-    private Snappy $snappy;
     private CoverStrategy $coverStrategy;
     private string $content;
 
-    public function __construct(Snappy $snappy)
-    {
-        $this->snappy = $snappy;
+    public function __construct(
+        private Snappy $snappy
+    ) {
         $this->coverStrategy = CoverStrategy::create(CoverStrategy::AUTO);
     }
 
