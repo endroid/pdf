@@ -10,13 +10,12 @@ use Knp\Snappy\Pdf as Snappy;
 
 final class Pdf implements PdfInterface
 {
-    private CoverStrategy $coverStrategy;
     private string $content;
 
     public function __construct(
-        private Snappy $snappy
+        private Snappy $snappy,
+        private CoverStrategy $coverStrategy = CoverStrategy::Auto
     ) {
-        $this->coverStrategy = CoverStrategy::create(CoverStrategy::AUTO);
     }
 
     public function setCover(string $data): void
@@ -79,11 +78,11 @@ final class Pdf implements PdfInterface
     {
         $options = $this->snappy->getOptions();
 
-        if (!$options['cover'] || $this->coverStrategy->equals(CoverStrategy::PARAM)) {
+        if (!$options['cover'] || CoverStrategy::Param === $this->coverStrategy) {
             return null;
         }
 
-        if ($this->coverStrategy->equals(CoverStrategy::AUTO) && !$this->hasMargins()) {
+        if (CoverStrategy::Auto === $this->coverStrategy && !$this->hasMargins()) {
             return null;
         }
 

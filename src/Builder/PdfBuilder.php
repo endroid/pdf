@@ -12,8 +12,8 @@ use Endroid\Pdf\Pdf;
 final class PdfBuilder
 {
     public function __construct(
-        private Pdf $pdf,
-        private AssetFactory $assetFactory
+        private readonly Pdf $pdf,
+        private readonly AssetFactory $assetFactory
     ) {
     }
 
@@ -21,7 +21,7 @@ final class PdfBuilder
     public function setCover(array $options): self
     {
         if (isset($options['strategy'])) {
-            $this->pdf->setCoverStrategy(CoverStrategy::create($options['strategy']));
+            $this->pdf->setCoverStrategy(CoverStrategy::from($options['strategy']));
             unset($options['strategy']);
         }
 
