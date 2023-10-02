@@ -8,7 +8,7 @@ use iio\libmergepdf\Merger;
 use iio\libmergepdf\Pages;
 use Knp\Snappy\Pdf as Snappy;
 
-final class Pdf implements PdfInterface
+final class Pdf implements PdfInterface, \Stringable
 {
     private string $content;
 
@@ -74,7 +74,7 @@ final class Pdf implements PdfInterface
         return $pdf;
     }
 
-    private function createCoverPdf(): ?Pdf
+    private function createCoverPdf(): Pdf|null
     {
         $options = $this->snappy->getOptions();
 
@@ -122,7 +122,7 @@ final class Pdf implements PdfInterface
         return false;
     }
 
-    public function __clone()
+    public function __clone(): void
     {
         $this->snappy = clone $this->snappy;
     }
