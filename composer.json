@@ -19,7 +19,7 @@
         "h4cc/wkhtmltopdf-amd64": "^0.12.4",
         "iio/libmergepdf": "^4.0",
         "knplabs/knp-snappy": "^1.0",
-        "symfony/http-foundation": "^5.4||^6.0"
+        "symfony/http-foundation": "^5.4||^6.4||^7.0"
     },
     "require-dev": {
         "endroid/quality": "dev-master"
