@@ -9,11 +9,11 @@ use Endroid\Asset\Factory\AssetFactory;
 use Endroid\Pdf\CoverStrategy;
 use Endroid\Pdf\Pdf;
 
-final class PdfBuilder
+final readonly class PdfBuilder
 {
     public function __construct(
-        private readonly Pdf $pdf,
-        private readonly AssetFactory $assetFactory
+        private Pdf $pdf,
+        private AssetFactory $assetFactory,
     ) {
     }
 

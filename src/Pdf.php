@@ -14,7 +14,7 @@ final class Pdf implements PdfInterface, \Stringable
 
     public function __construct(
         private Snappy $snappy,
-        private CoverStrategy $coverStrategy = CoverStrategy::Auto
+        private CoverStrategy $coverStrategy = CoverStrategy::Auto,
     ) {
     }
 
@@ -74,7 +74,7 @@ final class Pdf implements PdfInterface, \Stringable
         return $pdf;
     }
 
-    private function createCoverPdf(): Pdf|null
+    private function createCoverPdf(): ?Pdf
     {
         $options = $this->snappy->getOptions();
 
