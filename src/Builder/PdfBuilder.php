@@ -14,42 +14,17 @@ final readonly class PdfBuilder
     public function __construct(
         private Pdf $pdf,
         private AssetFactory $assetFactory,
-    ) {
-    }
+    ) {}
 
     /** @param array<mixed> $options */
     public function setCover(array $options): self
     {
-        if (isset($options['strategy'])) {
-            $this->pdf->setCoverStrategy(CoverStrategy::from($options['strategy']));
+        if (array_key_exists('strategy', $options)) {
+            $this->pdf->coverStrategy = CoverStrategy::from((string) $options['strategy']);
             unset($options['strategy']);
         }
 
-        $this->pdf->setCover(strval($this->createAsset($options)));
-
-        return $this;
-    }
-
-    /** @param array<mixed> $options */
-    public function setTableOfContents(array $options): self
-    {
-        $this->pdf->setTableOfContents(strval($this->createAsset($options)));
-
-        return $this;
-    }
-
-    /** @param array<mixed> $options */
-    public function setHeader(array $options): self
-    {
-        $this->pdf->setHeader(strval($this->createAsset($options)));
-
-        return $this;
-    }
-
-    /** @param array<mixed> $options */
-    public function setFooter(array $options): self
-    {
-        $this->pdf->setFooter(strval($this->createAsset($options)));
+        $this->pdf->cover = strval($this->createAsset($options));
 
         return $this;
     }
@@ -57,7 +32,7 @@ final readonly class PdfBuilder
     /** @param array<mixed> $options */
     public function setContent(array $options): self
     {
-        $this->pdf->setContent(strval($this->createAsset($options)));
+        $this->pdf->content = strval($this->createAsset($options));
 
         return $this;
     }
@@ -65,7 +40,7 @@ final readonly class PdfBuilder
     /** @param array<mixed> $options */
     public function setOptions(array $options): self
     {
-        $this->pdf->setOptions($options);
+        $this->pdf->options = $options;
 
         return $this;
     }

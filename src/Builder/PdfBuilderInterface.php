@@ -12,15 +12,6 @@ interface PdfBuilderInterface
     public function setCover(array $options): self;
 
     /** @param array<mixed> $options */
-    public function setTableOfContents(array $options): self;
-
-    /** @param array<mixed> $options */
-    public function setHeader(array $options): self;
-
-    /** @param array<mixed> $options */
-    public function setFooter(array $options): self;
-
-    /** @param array<mixed> $options */
     public function setContent(array $options): self;
 
     /** @param array<mixed> $options */

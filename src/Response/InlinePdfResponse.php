@@ -19,7 +19,7 @@ final class InlinePdfResponse extends Response
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => $this->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_INLINE,
-                'output.pdf'
+                'output.pdf',
             ),
         ]);
     }
