@@ -69,7 +69,7 @@ final class Pdf implements PdfInterface, \Stringable
 
     private function createDompdf(): Dompdf
     {
-        return new Dompdf($this->dompdfOptions);
+        return new Dompdf(['pdfBackend' => 'auto', ...$this->dompdfOptions]);
     }
 
     #[\Override]
