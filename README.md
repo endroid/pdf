@@ -7,7 +7,7 @@
 [![Total Downloads](http://img.shields.io/packagist/dt/endroid/pdf.svg)](https://packagist.org/packages/endroid/pdf)
 [![License](http://img.shields.io/packagist/l/endroid/pdf.svg)](https://packagist.org/packages/endroid/pdf)
 
-Library for easy PDF generation built around wkhtmltopdf and Snappy. Click
+Library for easy PDF generation built around Dompdf. Click
 [here](https://endroid.nl/play/pdf) for an example. Please note this example takes
 some time to load because it contains a lot of pages and no caching is applied.
 
@@ -65,6 +65,24 @@ embed resources like fonts, stylesheets and scripts.
 ```
 
 For more information you can [read the documentation](https://github.com/endroid/embed).
+
+## Dompdf performance
+
+By default Dompdf uses the `CPDF` backend. For large or complex documents, Dompdf can be faster when using
+the PDFLib backend.
+
+`endroid/pdf` forwards all Dompdf options via `setOptions()`, so you can enable PDFLib like this:
+
+```php
+$pdfBuilder->setOptions([
+    'pdfBackend' => 'PDFLib',
+    // Optional: set when your PDFLib installation requires it
+    // 'pdflibLicense' => 'your-license-key',
+]);
+```
+
+The PDFLib backend requires the `pdflib` PHP extension. The extension is distributed via PECL:
+https://pecl.php.net/package/pdflib
 
 ## The PDF builder
 
