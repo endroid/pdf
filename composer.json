@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": "^8.4",
+        "php": "^8.5",
         "dompdf/dompdf": "^3.1",
         "endroid/asset": "^2.0.1",
         "endroid/embed": "^1.1.1",
